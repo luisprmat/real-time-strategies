@@ -1,4 +1,4 @@
-<div class="space-y-2">
+<div class="space-y-2" wire:poll>
     @forelse($messages as $message)
         <div class="flex items-start gap-2.5">
 
