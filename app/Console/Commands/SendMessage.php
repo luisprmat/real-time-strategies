@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Events\NewMessage;
+use App\Events\NewPrivateMessage;
 use Illuminate\Console\Command;
 
 use function Laravel\Prompts\select;
@@ -46,7 +48,8 @@ class SendMessage extends Command
                 default: __('User #:id, I have a secret to tell you!', ['id' => $userId]),
             );
 
-            // Action to send private message
+            broadcast(new NewPrivateMessage($message, $userId));
+
             $this->info(__('Message was sent!'));
 
             return;
@@ -57,7 +60,8 @@ class SendMessage extends Command
             default: __('Hello everyone!'),
         );
 
-        // Action to send public message
+        broadcast(new NewMessage($message));
+
         $this->info(__('Message was sent!'));
     }
 }
