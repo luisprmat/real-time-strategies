@@ -14,9 +14,9 @@
                         <span class="text-sm font-semibold text-gray-900 dark:text-gray-200">{{ __('Public Message') }}</span>
                     @endif
 
-                    <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{$message['time']}}</span>
+                    <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ $message['time'] }}</span>
                 </div>
-                <p class="text-sm font-normal py-2 text-gray-900 dark:text-gray-300">{{$message['message']}}</p>
+                <p class="text-sm font-normal py-2 text-gray-900 dark:text-gray-300">{{ $message['message'] }}</p>
             </div>
         </div>
     @empty
