@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('private.{id}.newMessage', function ($user, $id) {
-    return (int) $user->id === (int) $id;
-});
+// Broadcast::channel('private.{id}.newMessage', function ($user, $id) {
+//     return (int) $user->id === (int) $id;
+// });

@@ -18,18 +18,20 @@ class Messages extends Component
         $userId = auth()->user()->id;
 
         return [
-            'echo:public.newMessage,.MessageCreated' => 'addMessage',
-            "echo-private:private.{$userId}.newMessage,.MessageCreated" => 'addPrivateMessage',
+            'mercure:public.newMessage' => 'addMessage',
+            "mercure:private.{$userId}.newMessage" => 'addPrivateMessage',
         ];
     }
 
     public function addMessage(array $event)
     {
-        $this->messages[] = [
-            'time' => $event['model']['created_at'],
-            'message' => $event['model']['message'],
-            'private' => $event['model']['private'],
+        $newMessage = [
+            'time' => $event['data']['model']['created_at'],
+            'message' => $event['data']['model']['message'],
+            'private' => $event['data']['model']['private'],
         ];
+
+        $this->messages[] = $newMessage;
     }
 
     public function addPrivateMessage(array $event)

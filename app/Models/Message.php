@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\PrivateChannel;
+use Duijker\LaravelMercureBroadcaster\Broadcasting\Channel;
 use Illuminate\Database\Eloquent\BroadcastsEvents;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -44,12 +43,12 @@ class Message extends Model
     {
         if ($this->user_id) {
             return [
-                new PrivateChannel("private.{$this->user_id}.newMessage"),
+                new Channel("private.{$this->user_id}.newMessage", true),
             ];
         }
 
         return [
-            new Channel('public.newMessage'),
+            new Channel('public.newMessage', true),
         ];
     }
 }
