@@ -1,66 +1,52 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Real Time Strategies
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+En este repositorio se muestran las diversas estrategias para interactuar con una aplicación en tiempo real; fue desarrollada en un PC con Windows 11.
 
-## About Laravel
+Las diferencias principales con [este demo](https://github.com/benbjurstrom/livewire-mercure-demo) son:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- La interfaz de la aplicación está traducida al español (con soporte para multilenguaje - solo falta implementar el selector de lenguaje), además tiene soporte para modo oscuro.
+- No uso **Docker** sino todos los servicios se inician desde Windows (Uso [Laragon](https://laragon.org/download/index.html)).
+- Los mensajes son persistidos en la base de datos.
+- El [demo](https://github.com/benbjurstrom/livewire-mercure-demo) en mención solo muestra la estrategia **Eventos del servidor** usando [Mercure](https://mercure.rocks/).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Es un script sencillo que consta de un comando de consola que simula enviar mensajes desde el servidor (públicos y privados) y se reciben a través de un componente de Livewire y las diversas configuraciones para cada una de las estrategias se encuentran en ramas distintas.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Estrategias usadas para la comunicación en tiempo real
+Una descripción en español de estas estrategias se encuentra en el artículo de [Codigofacilito](https://codigofacilito.com/articles/266), que recomiendo leer.
+1. [No real time](https://github.com/luisprmat/real-time-strategies/tree/no-real-time): No hay emisión de los mensajes en tiempo real, el comando los envía pero cada usuario debe refrescar el navegador para que se haga la consulta a la Base de Datos y así poder ver los nuevos mensajes sean públicos o privados.
+2. [Polling](https://github.com/luisprmat/real-time-strategies/tree/polling): Usa la directiva `wire:poll` de [**Livewire**](https://livewire.laravel.com/docs/wire-poll) para hacer peticiones al servidor cada *2.5s* e ir hidratando la información en el componente si hay nuevos mensajes.
+3. [Websockets (Pusher)](https://github.com/luisprmat/real-time-strategies/tree/pusher): Configuramos websockets usando [Pusher](https://pusher.com/), un servicio de terceros especializado en *realtime* pero tiene limitaciones ya que es un servicio de paga si se superan ciertos límites en el número de eventos o usuarios suscritos o concurrentes.
+4. [Websockets (Soketi)](https://github.com/luisprmat/real-time-strategies/tree/soketi): Usa el servidor de websockets [Soketi](https://docs.soketi.app) basado en Node.js y [`uWebSockets.js`](https://github.com/uNetworking/uWebSockets.js), muy rápido y usa el mismo driver de **pusher** por lo que no se require instalar paquetes adicionales, solo instalar el servidor de manera global usando `npm install -g @soketi/soketi` y correrlo en un nuevo terminal (recomiendo [PowerShell](https://learn.microsoft.com/es-es/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4) ya que pemite configurar variables de entorno con la sintaxis `$env:MY_VARIABLE='valor';`) con `soketi start`.
 
-## Learning Laravel
+    *Ventajas:*
+    - Es de código abierto, por lo que sólo se paga por la infraestructura del servidor pero no tiene límites teóricos en cuanto a número de mensajes.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+    *Desvantajas*
+    - Se ha detenido el mantenimiento de este proyecto desde mediados de 2023 y en este momento (*Marzo 6 de 2024*) no es compatible con las últimas versiones de [Node.js](https://nodejs.org) (`Node ^20 - npm ^10.4`), para que funcione necesitamos `Node <= 18` y `npm < 10`.
+5. [Websockets (Laravel Reverb)](https://reverb.laravel.com): *PENDIENTE: Esperando el lanzamiento de este nuevo paquete oficial de Laravel anunciado para el 12 de Marzo de 2024.*
+6. [Eventos del servidor (Mercure)](https://github.com/luisprmat/real-time-strategies/tree/mercure): Usa el hub de [Mercure](https://mercure.rocks/) (un sustituto moderno para websockets) basado en el servidor **Caddy**, escrito en [**Go**](https://go.dev/) que se caracteriza por su rapidez.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Guía rápida de instalación
+1. Clone el repositorio: `git clone https://github.com/luisprmat/real-time-strategies.git`
+2. Entre al directorio: `cd real-time-strategies`
+3. Instale las dependencias de composer (que debe estar instalado): `composer install`
+4. Cree una copia de las variables de entorno: `cp .env.example .env`
+5. Asigne la clave de la aplicación: `php artisan key:generate`
+6. Instale las dependencias de Node: `npm install && npm run build`
+7. Configure la base de datos: Depende el motor que quiera usar
+    - *Sqlite* (Por defecto en Laravel 11): El más fácil `touch database/database.sqlite` y asegúrese que `DB_CONNECTION=sqlite`
+    - *Mysql*: Mantenga la configuración por defecto (Laravel <= 10) y al correr las migraciones díga que **SI** cree la base de datos
+8. Corra las migraciones y los seeders: `php artisan migrate --seed`
+9. Acceda a la aplicación desde el navegador (dos formas):
+    - Con Laragon se crea un *virtualhost*: `http://real-time-strategies.test`
+    - Use el servidor de Laravel: `php artisan serve --port=8080` y acceda con `http://localhost:8080`
+        - *Nota: lo del cambio de puerto es por si quiere tener disponibles las dos formas sin entrar en conflictos por puertos ocupados, ya que laragon usa el puerto 80 por defecto.*
+10. Haga *login* con el usuario `usuario1@example.com` contraseña `password`
+11. En un navegador distinto (o en modo incógnito) haga *login* con el usuario `usuario2@example.com` contraseña `password`
+12. Ubíquese en la rama de la estrategia que quiere observar y configure todo de forma correcta: `git checkout <rama>`
+13. Use el comando artisan `php artisan message:send` para enviar los mensajes y observar su comportamiento según las ditintas estrategias.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Detalles técnicos
+Este repositorio fue creado desde una instalación fresca de Laravel 10 con el paquete Laravel Breeze (Livewire Volt Class API) para tener Livewire y la autenticación. Los invito a leer la documentación de cada servicio para obtener los detalles precisos de la implementación y configuración según la estrategia a observar.
 
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+[*Luis Parrado*](https://github.com/luisprmat): Programador web
