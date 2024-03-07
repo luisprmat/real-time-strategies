@@ -26,6 +26,16 @@ Una descripción en español de estas estrategias se encuentra en el artículo d
 5. [Websockets (Laravel Reverb)](https://reverb.laravel.com): *PENDIENTE: Esperando el lanzamiento de este nuevo paquete oficial de Laravel anunciado para el 12 de Marzo de 2024.*
 6. [Eventos del servidor (Mercure)](https://github.com/luisprmat/real-time-strategies/tree/mercure): Usa el hub de [Mercure](https://mercure.rocks/) (un sustituto moderno para websockets) basado en el servidor **Caddy**, escrito en [**Go**](https://go.dev/) que se caracteriza por su rapidez.
 
+    *Para correr Mercure server en windows:*
+    - Instale el [servidor de Mercure](https://github.com/dunglas/mercure/releases) adecuado a su sistema operativo, en  mi caso uso [mercure_Windows_x86_64.zip](https://github.com/dunglas/mercure/releases/download/v0.15.9/mercure_Windows_x86_64.zip).
+    - Descomprímalo y abra el archivo `Caddyfile.dev`.
+    - Busque la línea `cors_origins *` y cámbiela por `cors_origins http://localhost:8080`. (Esto para no tener problemas de acceso por CORS, y también debe lanzar su aplicación desde `php artisan serve --port=8080`)
+    - Abra un terminal de **Powershell** y ubíquese en la carpeta donde descomprimió el `Caddyfile.dev` y `mercure.exe` (`cd <ruta_carpeta>`)
+    - Defina las variables de entorno: `$env:MERCURE_PUBLISHER_JWT_KEY='!ChangeThisMercureHubJWTSecretKey!';`
+    - `$env:MERCURE_SUBSCRIBER_JWT_KEY='!ChangeThisMercureHubJWTSecretKey!';`
+    - `$env:SERVER_NAME=':8888';`
+    - Inicie el servidor: `.\mercure.exe run --config Caddyfile.dev`
+
 ## Guía rápida de instalación
 1. Clone el repositorio: `git clone https://github.com/luisprmat/real-time-strategies.git`
 2. Entre al directorio: `cd real-time-strategies`
