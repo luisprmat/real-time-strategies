@@ -21,7 +21,7 @@ Una descripción en español de estas estrategias se encuentra en el artículo d
     *Ventajas:*
     - Es de código abierto, por lo que sólo se paga por la infraestructura del servidor pero no tiene límites teóricos en cuanto a número de mensajes.
 
-    *Desvantajas*
+    *Desventajas*
     - Se ha detenido el mantenimiento de este proyecto desde mediados de 2023 y en este momento (*Marzo 6 de 2024*) no es compatible con las últimas versiones de [Node.js](https://nodejs.org) (`Node ^20 - npm ^10.4`), para que funcione necesitamos `Node <= 18` y `npm < 10`.
 5. [Websockets (Laravel Reverb)](https://reverb.laravel.com): *PENDIENTE: Esperando el lanzamiento de este nuevo paquete oficial de Laravel anunciado para el 12 de Marzo de 2024.*
 6. [Eventos del servidor (Mercure)](https://github.com/luisprmat/real-time-strategies/tree/mercure): Usa el hub de [Mercure](https://mercure.rocks/) (un sustituto moderno para websockets) basado en el servidor **Caddy**, escrito en [**Go**](https://go.dev/) que se caracteriza por su rapidez.
