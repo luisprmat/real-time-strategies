@@ -14,9 +14,12 @@ class Message extends Model
         'private',
     ];
 
-    protected $casts = [
-        'private' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'private' => 'boolean',
+        ];
+    }
 
     protected function time(): Attribute
     {
